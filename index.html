@@ -10,63 +10,53 @@
   <body>
 
     <div class="container">
+
       <input type="text" class="txtb" placeholder="Add a task">
+     
       <div class="notcomp">
         <h3>Not Completed</h3>
-
-
-
       </div>
 
       <div class="comp">
         <h3>Completed</h3>
       </div>
+
     </div>
-
+    <!-- Load GUN itself. -->
     <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
-
+    <!-- Load jQuery to help make things a bit easier. -->
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-
     <script>
+      // Initialize GUN and tell it we will be storing completed data under the key 'comp' and uncompleted data under the key 'not_comp' .
       var gun = Gun();
+
       var comp = gun.get('comp');
       var not_comp = gun.get('not_comp');
+
       $(".txtb").on("keyup",function(e){
         //13  means enter button
         if(e.keyCode == 13 && $(".txtb").val() != "")
         {
           var input = $(".txtb").val();
+          // Tell not-comp to store an object,
+          // with as title the value of the input element.
           not_comp.set(input);
+          // Clear the input element, so the user is free to enter more tasks.
           $(".txtb").val("");
-          
-          // var task = $("<div class='task'></div>").text($(".txtb").val());
-          // var del = $("<i class='fas fa-trash-alt'></i>").click(function(){
-          //   var p = $(this).parent();
-          //   p.fadeOut(function(){
-          //     p.remove();
-          //   });
-          // });
-
-          // var check = $("<i class='fas fa-check'></i>").click(function(){
-          //   var p = $(this).parent();
-          //   p.fadeOut(function(){
-          //     $(".comp").append(p);
-          //     p.fadeIn();
-          //   });
-          //   $(this).remove();
-          // });
-
-          // task.append(del,check);
-          // $(".notcomp").append(task);
-          //   //to clear the input
-          
         }
       });
       
-      
+      // Listen to any changes made to the GUN not-comp list.
       not_comp.map().on(function (todo, id) {
+        // Check if the todo element already exists.
+        // This can happen because GUN sometimes sends mulitple change events for the same item.
         var task = $('#' + id)
+        // Does is not yet exist?
         if (todo) {
+          // Create it.
+          // Set the id to the GUN id of the item.
+          // GUN automatically creates id's for all items.
+          // Finally set the new todo element to the end of the list
           var del = $("<i class='fas fa-trash-alt'></i>").click(function(){
             var p = $(this).parent();
             p.fadeOut(function(){
@@ -94,23 +84,24 @@
           $(".notcomp").append(task);
 
         }
-        // if (todo) {
-        //   var html = todo.title
-        //   li.html(html)
-        // }
       })
       
       
-      
-      comp.map().on(function (todo, id) {2
-        // alert(todo)
+      // Listen to any changes made to the GUN comp list.      
+      comp.map().on(function (todo, id) {
+        // Check if the todo element already exists.
+        // This can happen because GUN sometimes sends mulitple change events for the same item.
         var task = $('#' + id)
+        // Does is not yet exist?
         if (todo) {
+          // Create it.
+          // Set the id to the GUN id of the item.
+          // GUN automatically creates id's for all items.
+          // Finally set the new todo element to the end of the list
           var del = $("<i class='fas fa-trash-alt'></i>").click(function(){
             var p = $(this).parent();
             p.fadeOut(function(){
               p.remove();
-              // alert(id)
               comp.get(id).put(null);
             });
           });
@@ -120,11 +111,9 @@
           $(".comp").append(task);
 
         }
-        // if (todo) {
-        //   var html = todo.title
-        //   li.html(html)
-        // }
       })
+
+
     </script>
 
   </body>
