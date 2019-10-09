@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+  <body>
+
+    <div class="container">
+      <input type="text" class="txtb" placeholder="Add a task">
+      <div class="notcomp">
+        <h3>Not Completed</h3>
+
+
+
+      </div>
+
+      <div class="comp">
+        <h3>Completed</h3>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+    <script>
+      var gun = Gun();
+      var comp = gun.get('comp');
+      var not_comp = gun.get('not_comp');
+      $(".txtb").on("keyup",function(e){
+        //13  means enter button
+        if(e.keyCode == 13 && $(".txtb").val() != "")
+        {
+          var input = $(".txtb").val();
+          not_comp.set(input);
+          $(".txtb").val("");
+          
+          // var task = $("<div class='task'></div>").text($(".txtb").val());
+          // var del = $("<i class='fas fa-trash-alt'></i>").click(function(){
+          //   var p = $(this).parent();
+          //   p.fadeOut(function(){
+          //     p.remove();
+          //   });
+          // });
+
+          // var check = $("<i class='fas fa-check'></i>").click(function(){
+          //   var p = $(this).parent();
+          //   p.fadeOut(function(){
+          //     $(".comp").append(p);
+          //     p.fadeIn();
+          //   });
+          //   $(this).remove();
+          // });
+
+          // task.append(del,check);
+          // $(".notcomp").append(task);
+          //   //to clear the input
+          
+        }
+      });
+      
+      
+      not_comp.map().on(function (todo, id) {
+        var task = $('#' + id)
+        if (todo) {
+          var del = $("<i class='fas fa-trash-alt'></i>").click(function(){
+            var p = $(this).parent();
+            p.fadeOut(function(){
+              p.remove();
+              // alert(id)
+              not_comp.get(id).put(null);
+            });
+          });
+
+          var check = $("<i class='fas fa-check'></i>").click(function(){
+            var p = $(this).parent();
+            p.fadeOut(function(){
+              $(".comp").append(p);
+              console.log(todo)
+              comp.set(todo);
+              not_comp.get(id).put(null);
+              // p.fadeIn();
+              
+            });
+            $(this).remove();
+          });
+          
+          task = $("<div class='task' id= '"+id+"' ></div>").text(todo).appendTo(".notcomp")
+          task.append(del,check);
+          $(".notcomp").append(task);
+
+        }
+        // if (todo) {
+        //   var html = todo.title
+        //   li.html(html)
+        // }
+      })
+      
+      
+      
+      comp.map().on(function (todo, id) {2
+        // alert(todo)
+        var task = $('#' + id)
+        if (todo) {
+          var del = $("<i class='fas fa-trash-alt'></i>").click(function(){
+            var p = $(this).parent();
+            p.fadeOut(function(){
+              p.remove();
+              // alert(id)
+              comp.get(id).put(null);
+            });
+          });
+          
+          task = $("<div class='task' id= '"+id+"' ></div>").text(todo).appendTo(".notcomp")
+          task.append(del);
+          $(".comp").append(task);
+
+        }
+        // if (todo) {
+        //   var html = todo.title
+        //   li.html(html)
+        // }
+      })
+    </script>
+
+  </body>
+</html>
